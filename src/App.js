@@ -9,10 +9,19 @@ const randomChoice = arr => {
   return arr[randIndex]
 }
 
+// we pick out our props inside the header component
+// we can pass down functions as props as well as things like numbers, strings, arrays or objects
+
 const Header = ({clearSearch, hasResults}) => (
   <div className="header grid">
     {/* if we have results, show the clear button, otherwise show the title  */}
-    {hasResults ? <imr src={clearButton} /> : <h1 className="title">Jiffy</h1>}
+    {hasResults ? (
+      <button onClick={clearSearch}>
+        <img src={clearButton} alt="clear button"/>
+      </button>
+    ) : (
+      <h1 className="title">Jiffy</h1>
+    )}
   </div>
 )
 
@@ -50,22 +59,28 @@ class App extends Component {
 
     try {
       // here we use the await keyword to wait for our response to come back
-      // we use our input searchTerm in the query string
-      const response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=5rhhNgO32vs42oZGBOZxIz8PGAlGI7S0&q=${searchTerm}&limit=25&offset=0&rating=G&lang=en`)
-      // here we convert our raw response into json data
+      const response = await fetch(
+        `https://api.giphy.com/v1/gifs/search?api_key=o7IyuSKkLiR728rSCOE3Pov4refIv10F&q=${
+          searchTerm
+        }&limit=25&offset=0&rating=PG&lang=en`
+      );
+      // here we convert our raw reponse into json data
       // const {data} gets the .data part of our response
-      const {data} = await response.json()
+      const {data} = await response.json();
 
-        // here we check if the array of results are empty, if it is, we throw an error which will stop the code here and handle it in the catch area
-        if (!data.length) {
-          throw `Nothing found for ${searchTerm}`;
-        }
+      // here we check if the array of results is empty
+      // if it is, we throw an error which will stop the
+      // code here and handle it in the catch area
 
-        // here we grab a random result from our images
-        const randomGif = randomChoice(data)
+      if (!data.length) {
+        throw `Nothing found for ${searchTerm}`;
+      }
 
-        console.log({randomGif})
-        console.log(data)
+      // here we grab a random result from our images
+      const randomGif = randomChoice(data);
+
+      console.log({randomGif});
+      console.log(data);
 
         this.setState((prevState, props) => ({
           ...prevState,
@@ -122,13 +137,13 @@ class App extends Component {
   }
 
   // here we reset our state by clearing everything out and making it default again (like in our original state)
-clearSearch = () => {
-  this.setState((prevState, props) => ({
-    ...prevState,
-    searchTerm: "",
-    hintText: "",
-    gifs: []
-  }))
+  clearSearch = () => {
+    this.setState((prevState, props) => ({
+      ...prevState,
+      searchTerm: '',
+      hintText: '',
+      gifs: []
+    }));
 }
 
 
